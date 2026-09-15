@@ -5,6 +5,8 @@ import { ResultCard } from './components/ResultCard';
 import { HistoryView } from './components/HistoryView';
 import { ShareModal } from './components/ShareModal';
 import { ServerModal, GuideModal } from './components/Modals';
+import { PrivacyPolicyModal, TermsOfServiceModal, ContactUsModal } from './components/LegalModals';
+import { Footer } from './components/Footer';
 import { AdBanner } from './components/AdBanner';
 import { DEFAULT_SERVERS } from './data/servers';
 import { SpeedTestServer, SpeedTestResult, SpeedTestStage, SpeedTestSample } from './types';
@@ -49,6 +51,9 @@ export default function App() {
   // Modals
   const [showServerModal, setShowServerModal] = useState<boolean>(false);
   const [showGuideModal, setShowGuideModal] = useState<boolean>(false);
+  const [showPrivacyModal, setShowPrivacyModal] = useState<boolean>(false);
+  const [showTermsModal, setShowTermsModal] = useState<boolean>(false);
+  const [showContactModal, setShowContactModal] = useState<boolean>(false);
   const [shareResult, setShareResult] = useState<SpeedTestResult | null>(null);
 
   const t = TRANSLATIONS[currentLang] || TRANSLATIONS['EN'];
@@ -342,15 +347,13 @@ export default function App() {
       </main>
 
       {/* Footer */}
-      <footer className="w-full bg-[#050810] border-t border-slate-800/80 py-6 text-center text-xs text-slate-500">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <span>© 2026 TSI SpeedTest Engine • Powered by Edge Network Nodes</span>
-          <div className="flex items-center gap-4 text-slate-400 text-xs font-semibold">
-            <button onClick={() => setShowGuideModal(true)} className="hover:text-cyan-400 transition">Node Guide</button>
-            <button onClick={() => setShowServerModal(true)} className="hover:text-cyan-400 transition">Edge Servers</button>
-          </div>
-        </div>
-      </footer>
+      <Footer
+        onOpenPrivacy={() => setShowPrivacyModal(true)}
+        onOpenTerms={() => setShowTermsModal(true)}
+        onOpenContact={() => setShowContactModal(true)}
+        onOpenServers={() => setShowServerModal(true)}
+        onOpenGuide={() => setShowGuideModal(true)}
+      />
 
       {/* Modals */}
       {showServerModal && (
@@ -369,6 +372,9 @@ export default function App() {
       )}
 
       {showGuideModal && <GuideModal onClose={() => setShowGuideModal(false)} />}
+      {showPrivacyModal && <PrivacyPolicyModal onClose={() => setShowPrivacyModal(false)} />}
+      {showTermsModal && <TermsOfServiceModal onClose={() => setShowTermsModal(false)} />}
+      {showContactModal && <ContactUsModal onClose={() => setShowContactModal(false)} />}
       {shareResult && <ShareModal result={shareResult} onClose={() => setShareResult(null)} />}
     </div>
   );
