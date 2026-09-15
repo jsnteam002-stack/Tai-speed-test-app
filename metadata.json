@@ -1,0 +1,6 @@
+{
+  "name": "TSI SpeedTest",
+  "description": "Fast, accurate, and simple internet speed test for measuring ping, jitter, download, and upload speeds in real-time.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
