@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { Header } from './components/Header';
 import { Speedometer } from './components/Speedometer';
 import { ResultCard } from './components/ResultCard';
@@ -257,33 +258,51 @@ export default function App() {
             </div>
 
             {/* Animated Gauge or Active Result Card */}
-            {stage !== 'complete' ? (
-              <div className="flex flex-col items-center">
-                <Speedometer
-                  value={liveMbps}
-                  stage={stage}
-                  stageMessage={stageMessage}
-                  onStart={handleStartTest}
-                  progressPercent={progressPercent}
-                />
-                {(stage === 'download' || stage === 'upload' || stage === 'ping') && (
-                  <button
-                    onClick={handleCancelTest}
-                    className="mt-2 px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl border border-slate-700 transition"
+            <AnimatePresence mode="wait">
+              {stage !== 'complete' ? (
+                <motion.div
+                  key="speedometer"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="flex flex-col items-center w-full"
+                >
+                  <Speedometer
+                    value={liveMbps}
+                    stage={stage}
+                    stageMessage={stageMessage}
+                    onStart={handleStartTest}
+                    progressPercent={progressPercent}
+                  />
+                  {(stage === 'download' || stage === 'upload' || stage === 'ping') && (
+                    <button
+                      onClick={handleCancelTest}
+                      className="mt-2 px-4 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold rounded-xl border border-slate-700 transition"
+                    >
+                      Cancel Test
+                    </button>
+                  )}
+                </motion.div>
+              ) : (
+                currentResult && (
+                  <motion.div
+                    key="result-card"
+                    initial={{ opacity: 0, y: 16, scale: 0.97 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -16, scale: 0.97 }}
+                    transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                    className="w-full max-w-4xl"
                   >
-                    Cancel Test
-                  </button>
-                )}
-              </div>
-            ) : (
-              currentResult && (
-                <ResultCard
-                  result={currentResult}
-                  onRetry={handleStartTest}
-                  onOpenShare={(res) => setShareResult(res)}
-                />
-              )
-            )}
+                    <ResultCard
+                      result={currentResult}
+                      onRetry={handleStartTest}
+                      onOpenShare={(res) => setShareResult(res)}
+                    />
+                  </motion.div>
+                )
+              )}
+            </AnimatePresence>
           </div>
         )}
 
